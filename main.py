@@ -1,6 +1,6 @@
 from app import app
 from db_setup import init_db, db_session
-from forms import MusicSearchForm
+from forms import MusicSearchForm, AlbumForm
 from flask import flash, render_template, request, redirect
 from models import Album
  
@@ -30,7 +30,17 @@ def search_results(search):
         return redirect('/')
     else:
         # display results
-        return render_template('results.html', results=results)
+        return render_template('results.html', table=table)
+ 
+ 
+@app.route('/new_album', methods=['GET', 'POST'])
+def new_album():
+    """
+    Add a new album
+    """
+    form = AlbumForm(request.form)
+    return render_template('new_album.html', form=form)
+ 
  
 if __name__ == '__main__':
     app.run()
