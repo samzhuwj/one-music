@@ -49,6 +49,29 @@ def new_album():
  
     return render_template('new_album.html', form=form)
  
+
+def save_changes(album, form, new=False):
+    """
+    Save the changes to the database
+    """
+    # Get data from form and assign it to the correct attributes
+    # of the SQLAlchemy table object
+    artist = Artist()
+    artist.name = form.artist.data
+ 
+    album.artist = artist
+    album.title = form.title.data
+    album.release_date = form.release_date.data
+    album.publisher = form.publisher.data
+    album.media_type = form.media_type.data
+ 
+    if new:
+        # Add the new album to the database
+        db_session.add(album)
+ 
+    # commit the data to the database
+    db_session.commit()
+
  
 if __name__ == '__main__':
     app.run()
