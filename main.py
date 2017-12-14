@@ -39,6 +39,14 @@ def new_album():
     Add a new album
     """
     form = AlbumForm(request.form)
+ 
+    if request.method == 'POST' and form.validate():
+        # save the album
+        album = Album()
+        save_changes(album, form, new=True)
+        flash('Album created successfully!')
+        return redirect('/')
+ 
     return render_template('new_album.html', form=form)
  
  
