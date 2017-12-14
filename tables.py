@@ -1,4 +1,4 @@
-from flask_table import Table, Col
+from flask_table import Table, Col, LinkCol
 
 
 class Results(Table):
@@ -8,3 +8,4 @@ class Results(Table):
     release_date = Col('Release Date')
     publisher = Col('Publisher')
     media_type = Col('Media')
+    edit = LinkCol('Edit', 'edit', url_kwargs=dict(id='id'))
