@@ -73,5 +73,23 @@ def save_changes(album, form, new=False):
     db_session.commit()
 
  
+@app.route('/item/<int:id>', methods=['GET', 'POST'])
+def edit(id):
+    qry = db_session.query(Album).filter(
+                Album.id==id)
+    album = qry.first()
+ 
+    if album:
+        form = AlbumForm(formdata=request.form, obj=album)
+        if request.method == 'POST' and form.validate():
+            # save edits
+            save_changes(album, form)
+            flash('Album updated successfully!')
+            return redirect('/')
+        return render_template('edit_album.html', form=form)
+    else:
+        return 'Error loading #{id}'.format(id=id)
+
+
 if __name__ == '__main__':
     app.run()
