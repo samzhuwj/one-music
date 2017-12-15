@@ -21,15 +21,30 @@ def search_results(search):
     results = []
     search_string = search.data['search']
  
-    if search.data['search'] == '':
+    if search_string:
+        if search.data['select'] == 'Artist':
+            qry = db_session.query(Album).filter(
+                Artist.name.contains(search_string))
+        elif search.data['select'] == 'Album':
+            qry = db_session.query(Album).filter(
+                Album.title.contains(search_string))
+        elif search.data['select'] == 'Publisher':
+            qry = db_session.query(Album).filter(
+                Album.publisher.contains(search_string))
+        else:
+            qry = db_session.query(Album)
+    else:
         qry = db_session.query(Album)
-        results = qry.all()
+ 
+    results = qry.all()
  
     if not results:
         flash('No results found!')
         return redirect('/')
     else:
         # display results
+        table = Results(results)
+        table.border = True
         return render_template('results.html', table=table)
  
  
