@@ -108,3 +108,27 @@ def edit(id):
 
 if __name__ == '__main__':
     app.run()
+
+
+@app.route('/delete/<int:id>', methods=['GET', 'POST'])
+def delete(id):
+    """
+    Delete the item in the database that matches the specified
+    id in the URL
+    """
+    qry = db_session.query(Album).filter(
+        Album.id==id)
+    album = qry.first()
+ 
+    if album:
+        form = AlbumForm(formdata=request.form, obj=album)
+        if request.method == 'POST' and form.validate():
+            # delete the item from the database
+            db_session.delete(album)
+            db_session.commit()
+ 
+            flash('Album deleted successfully!')
+            return redirect('/')
+        return render_template('delete_album.html', form=form)
+    else:
+        return 'Error deleting #{id}'.format(id=id)
